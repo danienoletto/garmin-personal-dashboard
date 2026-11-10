@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Il mio stato fisico</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--tx:#14202b;--mut:#6b7886;--line:#e3e8ed;--acc:#0e9f8e;--ok:#2fa56b;--warn:#e0a21b;--bad:#d4543f;--c1:#3b6fd4;--c2:#8a5bd6;--c3:#9db4d0;--c4:#e8b4a8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1419;--card:#18212a;--tx:#e8eef3;--mut:#8fa0ae;--line:#26323d;--acc:#2cc4b0;--ok:#4cc58a;--warn:#f0b83c;--bad:#ee6f59;--c1:#6b95ec;--c2:#a98af0;--c3:#4b6580;--c4:#a8685c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1419;--card:#18212a;--tx:#e8eef3;--mut:#8fa0ae;--line:#26323d;--acc:#2cc4b0;--ok:#4cc58a;--warn:#f0b83c;--bad:#ee6f59;--c1:#6b95ec;--c2:#a98af0;--c3:#4b6580;--c4:#a8685c;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px 14px 40px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+h1{font-size:20px;margin:0}h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin:0 0 10px}
+.sub{color:var(--mut);font-size:12px}
+button{font:inherit;cursor:pointer}
+.ghost{background:none;border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:6px 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.hero{display:flex;gap:16px;align-items:center}
+.hero b{font-size:17px;display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.grid .card{margin:0}
+.big{font-size:26px;font-weight:700;line-height:1.1}
+.lbl{color:var(--mut);font-size:12px}
+.pill{display:inline-block;border-radius:99px;padding:2px 8px;font-size:11px;font-weight:600;color:#fff}
+.err{color:var(--mut);font-size:13px;margin:0}
+svg{display:block;width:100%;height:auto}
+.leg{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--mut);margin-top:6px}
+.leg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px}
+#msgs{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.m{padding:9px 12px;border-radius:14px;white-space:pre-wrap;max-width:92%}
+.m.u{align-self:flex-end;background:var(--acc);color:#fff}
+.m.a{align-self:flex-start;background:var(--bg);border:1px solid var(--line)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chips button{background:var(--bg);border:1px solid var(--line);color:var(--tx);border-radius:99px;padding:5px 11px;font-size:13px}
+.row{display:flex;gap:8px}
+.row input{flex:1;min-width:0;font:inherit;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--tx)}
+.row button{background:var(--acc);border:0;color:#fff;border-radius:12px;padding:0 16px;font-weight:600}
+.row button:disabled{opacity:.5}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.hd h2{margin:0}.seg{display:flex;gap:4px}.seg button{background:var(--bg);border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:3px 9px;font-size:12px}.seg .on{background:var(--acc);border-color:var(--acc);color:#fff}.det{font-size:13px;margin-top:8px;min-height:20px}[data-i]{cursor:pointer}.dr{stroke-dasharray:1;stroke-dashoffset:1;animation:dr .9s ease forwards}@keyframes dr{to{stroke-dashoffset:0}}.gr{transform-box:fill-box;transform-origin:bottom;animation:gr .6s ease both}@keyframes gr{from{transform:scaleY(0)}}#stats .card{cursor:pointer;transition:transform .15s}#stats .card:active{transform:scale(.97)}
+</style>
+</head>
+<body>
+<main>
+<header><div><h1>Il mio stato fisico</h1><div class="sub" id="upd">Caricamento…</div></div><button class="ghost" id="rf">Aggiorna</button></header>
+<section class="card"><h2>Chiedi ai tuoi dati</h2>
+<div class="chips" id="chips"></div><div id="msgs"></div>
+<div class="row"><input id="q" placeholder="Scrivi una domanda…" autocomplete="off"><button id="send">Invia</button></div>
+<p class="sub" id="note" style="margin:8px 0 0">Commenti informativi, non consulenza medica. Tocca un riquadro per chiedere di più.</p></section>
+<section class="card hero" id="hero"><p class="err">Caricamento…</p></section>
+<div class="grid" id="stats"></div>
+<section class="card"><div class="hd"><h2>HRV</h2><div class="seg" id="hrvR"></div></div><div id="hrv"></div><div class="det" id="hrvD"></div></section>
+<section class="card"><div class="hd"><h2>Sonno</h2><div class="seg" id="sleepR"></div></div><div id="sleep"></div><div class="det" id="sleepD"></div></section>
+<section class="card"><div class="hd"><h2>Attività per mese</h2><div class="seg" id="monR"></div></div><div id="months"></div><div class="det" id="monD"></div></section>
+</main>
+<script>
+const S="Garmlink",$=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+let mcp=null,sample=null,D={},E={},stamp=null,hist=[],busy=false;
+const unwrap=r=>{let p=r&&r.payload;if(p===undefined){try{p=JSON.parse(r.content[0].text)}catch(e){p=null}}
+if(Array.isArray(p))return p;if(p&&typeof p==="object"){if(Array.isArray(p.buckets))return p.buckets;const a=Object.values(p).find(Array.isArray);if(a)return a}return[]};
+const msgFor=e=>({needs_reauth:"Riconnetti Garmlink dai connettori di Claude.",server_not_connected:"Garmlink non è collegato a Claude.",approval_required:"Serve la tua approvazione per leggere i dati.",not_in_manifest:"Permesso non concesso a questa pagina."})[e&&e.code]||"Dati non disponibili al momento.";
+async function load(k,tool,input){
+for(let i=0;i<2;i++){try{const r=await mcp.callTool(S,tool,input);D[k]=unwrap(r);delete E[k];if(r.cache&&r.cache.storedAt&&!stamp)stamp=r.cache.storedAt;return}
+catch(e){if(e&&e.retryable&&i==0){await new Promise(z=>setTimeout(z,900+Math.random()*600));continue}D[k]=null;E[k]=msgFor(e);return}}}
+const bad=k=>`<p class="err">${esc(E[k]||"Nessun dato disponibile.")}</p>`;
+const hm=m=>Math.floor(m/60)+"h "+String(Math.round(m%60)).padStart(2,"0");
+const lv={LOW:"Bassa",MODERATE:"Moderata",HIGH:"Alta",PRIME:"Ottima"};
+const col=s=>s>=75?"var(--ok)":s>=50?"var(--warn)":"var(--bad)";
+function hero(){const r=D.ready&&D.ready[0];if(!r){$("#hero").innerHTML=bad("ready");return}
+const c=2*Math.PI*42,o=c*(1-r.score/100);
+$("#hero").innerHTML=`<svg viewBox="0 0 100 100" style="width:96px;flex:none"><circle cx="50" cy="50" r="42" fill="none" stroke="var(--line)" stroke-width="9"/><circle cx="50" cy="50" r="42" fill="none" stroke="${col(r.score)}" stroke-width="9" stroke-linecap="round" id="ring" style="transition:stroke-dashoffset 1s ease" stroke-dasharray="${c}" stroke-dashoffset="${c}" transform="rotate(-90 50 50)"/><text x="50" y="58" text-anchor="middle" font-size="26" font-weight="700" fill="var(--tx)">${r.score}</text></svg><div><div class="lbl">Prontezza di oggi</div><b>${lv[r.level]||r.level}</b><div class="sub">HRV ${r.hrv_feedback==="POOR"?"basso":r.hrv_feedback==="GOOD"?"buono":"nella media"} · recupero ${r.recovery_feedback==="GOOD"||r.recovery_feedback==="VERY_GOOD"?"buono":"parziale"}</div></div>`}
+function stats(){const rg=$("#ring");if(rg)requestAnimationFrame(()=>requestAnimationFrame(()=>rg.setAttribute("stroke-dashoffset",2*Math.PI*42*(1-D.ready[0].score/100))));$("#stats").onclick=e=>{const c=e.target.closest("[data-q]");if(c){window.scrollTo({top:0,behavior:"smooth"});ask(c.dataset.q)}};const h=D.hrv&&D.hrv[0],s=D.sleep&&D.sleep[0],d=D.day&&D.day[0];
+const card=(l,v,x)=>`<div class="card" data-q="Spiegami questo dato: ${l} ${v}. Come lo interpreti?"><div class="lbl">${l}</div><div class="big">${v}</div><div class="sub">${x}</div></div>`;
+$("#stats").innerHTML=(h?card("HRV notturno",h.last_night_avg+" ms","fascia "+h.baseline_low+"–"+h.baseline_high):"")+(s?card("Sonno",hm(s.total_min),"punteggio "+s.score):"")+(d?card("Battito a riposo",d.resting_hr+" bpm","media 7 gg "+d.resting_hr_avg_7d):"")+(d?card("Body Battery",d.bb_at_wake,"al risveglio"):"")}
+const A={hrv:1,sleep:1,mon:1},R={hrv:14,sleep:7,mon:"duration_h"},sel={};
+const MN=["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+const dl=d=>new Date(d+"T12:00").toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"});
+function seg(k,opts,cur,fn){const e=$("#"+k+"R");e.innerHTML=opts.map(([v,l])=>`<button class="${v==cur?"on":""}" data-v="${v}">${l}</button>`).join("");e.onclick=ev=>{const b=ev.target.closest("[data-v]");if(b){A[k]=1;fn(isNaN(+b.dataset.v)?b.dataset.v:+b.dataset.v)}}}
+function hrv(){const a=D.hrv;if(!a||!a.length){$("#hrv").innerHTML=bad("hrv");return}
+seg("hrv",[[7,"7 g"],[14,"14 g"],[30,"30 g"]],R.hrv,v=>{R.hrv=v;sel.hrv=null;hrv()});
+const p=a.slice(0,R.hrv).reverse(),n=p.length,i0=sel.hrv==null?n-1:Math.min(sel.hrv,n-1),lo=a[0].baseline_low,hi=a[0].baseline_high,vs=p.map(x=>x.last_night_avg),mx=Math.max(hi,...vs)+6,mn=Math.min(lo,...vs)-6;
+const X=i=>10+i*(300/Math.max(n-1,1)),Y=v=>110-(v-mn)/(mx-mn)*100,s=p[i0];
+$("#hrv").innerHTML=`<svg viewBox="0 0 320 120"><rect x="10" y="${Y(hi)}" width="300" height="${Y(lo)-Y(hi)}" fill="var(--ok)" opacity=".18" rx="4"/><line x1="${X(i0)}" x2="${X(i0)}" y1="4" y2="112" stroke="var(--acc)" stroke-dasharray="3 3" opacity=".6"/><polyline class="${A.hrv?"dr":""}" pathLength="1" points="${p.map((x,i)=>X(i)+","+Y(x.last_night_avg)).join(" ")}" fill="none" stroke="var(--c1)" stroke-width="2.5" stroke-linejoin="round"/>${p.map((x,i)=>`<circle cx="${X(i)}" cy="${Y(x.last_night_avg)}" r="${i==i0?5.5:3}" fill="${i==i0?"var(--acc)":"var(--c1)"}"/><circle data-i="${i}" cx="${X(i)}" cy="${Y(x.last_night_avg)}" r="11" fill="transparent"/>`).join("")}</svg><div class="leg"><span><i style="background:var(--ok);opacity:.4"></i>La tua fascia attuale</span><span><i style="background:var(--c1)"></i>HRV notturno</span></div>`;
+$("#hrvD").innerHTML=`<b>${dl(s.day)}</b> · ${s.last_night_avg} ms · ${s.last_night_avg<lo?"sotto":s.last_night_avg>hi?"sopra":"dentro"} la fascia · picco ${s.last_night_5min_high} ms`;
+$("#hrv").onclick=e=>{const t=e.target.closest("[data-i]");if(t){sel.hrv=+t.dataset.i;hrv()}};A.hrv=0}
+function sleep(){const a=D.sleep;if(!a||!a.length){$("#sleep").innerHTML=bad("sleep");return}
+seg("sleep",[[7,"7 notti"],[14,"14"],[30,"30"]],R.sleep,v=>{R.sleep=v;sel.sleep=null;sleep()});
+const p=a.slice(0,R.sleep).reverse(),n=p.length,w=300/n,i0=sel.sleep==null?n-1:Math.min(sel.sleep,n-1),mx=Math.max(540,...p.map(x=>x.total_min)),st=Math.ceil(n/7),s=p[i0];
+const bars=p.map((x,i)=>{let y=100;const g=(m,c)=>{const h=m/mx*90;y-=h;return`<rect class="${A.sleep?"gr":""}" x="${10+i*w+w*.15}" y="${y}" width="${w*.7}" height="${h}" fill="var(${c})" rx="2"/>`};
+return`<g data-i="${i}" opacity="${i==i0?1:.5}">${g(x.deep_min,"--c2")+g(x.rem_min,"--c1")+g(x.light_min,"--c3")+g(x.awake_min,"--c4")}<rect x="${10+i*w}" y="5" width="${w}" height="110" fill="transparent"/></g>`+(i%st==0||i==i0?`<text x="${10+i*w+w/2}" y="116" text-anchor="middle" font-size="9" fill="var(--mut)">${x.day.slice(8)}</text>`:"")}).join("");
+$("#sleepD").innerHTML=`<b>${dl(s.day)}</b> · ${hm(s.total_min)} · punteggio ${s.score} · profondo ${hm(s.deep_min)} · REM ${hm(s.rem_min)} · FC riposo ${s.resting_hr}`;
+$("#sleep").onclick=e=>{const t=e.target.closest("[data-i]");if(t){sel.sleep=+t.dataset.i;sleep()}};A.sleep=0;
+$("#sleep").innerHTML=`<svg viewBox="0 0 320 122">${bars}</svg><div class="leg"><span><i style="background:var(--c2)"></i>Profondo</span><span><i style="background:var(--c1)"></i>REM</span><span><i style="background:var(--c3)"></i>Leggero</span><span><i style="background:var(--c4)"></i>Sveglio</span></div>`}
+function months(){const a=D.months;if(!a||!a.length){$("#months").innerHTML=bad("months");return}
+seg("mon",[["duration_h","Ore"],["activities","Attività"],["distance_km","Km"]],R.mon,v=>{R.mon=v;months()});
+const p=[...a].sort((x,y)=>x.bucket<y.bucket?-1:1),k=R.mon,mx=Math.max(...p.map(x=>x[k]))||1,w=300/p.length,i0=sel.mon==null?p.length-1:Math.min(sel.mon,p.length-1),L="GFMAMGLASOND",s=p[i0];
+$("#months").innerHTML=`<svg viewBox="0 0 320 130">${p.map((x,i)=>{const h=x[k]/mx*90;return`<g data-i="${i}" opacity="${i==i0?1:.55}"><rect class="${A.mon?"gr":""}" x="${10+i*w+4}" y="${105-h}" width="${w-8}" height="${h}" fill="var(--acc)" rx="3"/><text x="${10+i*w+w/2}" y="${100-h}" text-anchor="middle" font-size="9" fill="var(--mut)">${Math.round(x[k])}</text><text x="${10+i*w+w/2}" y="122" text-anchor="middle" font-size="10" fill="var(--mut)">${L[+x.bucket.slice(5)-1]}</text><rect x="${10+i*w}" y="5" width="${w}" height="122" fill="transparent"/></g>`}).join("")}</svg>`;
+$("#monD").innerHTML=`<b>${MN[+s.bucket.slice(5)-1]}</b> · ${s.activities} attività · ${s.duration_h.toFixed(1)} h · ${Math.round(s.distance_km)} km · FC media ${Math.round(s.avg_hr)}`;
+$("#months").onclick=e=>{const t=e.target.closest("[data-i]");if(t){sel.mon=+t.dataset.i;months()}};A.mon=0}
+function ctx(){const c=(k,n,f)=>(D[k]||[]).slice(0,n).map(f);
+return JSON.stringify({prontezza:c("ready",7,x=>[x.day,x.score,x.level,x.hrv_feedback]),hrv:c("hrv",14,x=>[x.day,x.last_night_avg,x.status,x.baseline_low,x.baseline_high]),sonno:c("sleep",14,x=>[x.day,x.total_min,x.score,x.deep_min,x.rem_min,x.resting_hr]),giorni:c("day",7,x=>[x.day,x.steps,x.stress_avg,x.bb_at_wake,x.resting_hr]),mesi:c("months",12,x=>[x.bucket,x.activities,x.duration_h,x.distance_km])})}
+function add(r,t){const d=document.createElement("div");d.className="m "+(r==="user"?"u":"a");d.textContent=t;$("#msgs").appendChild(d);d.scrollIntoView({block:"nearest"});return d}
+async function ask(t){t=t.trim();if(!t||busy||!sample)return;busy=true;$("#send").disabled=true;$("#q").value="";$("#chips").style.display="none";
+hist.push({role:"user",content:t});add("user",t);const b=add("a","…");
+const h=hist.length>8?hist.slice(-7):hist;
+const pre="Sei l’assistente che commenta i dati Garmin dell’utente. Rispondi in italiano, in modo chiaro e breve (massimo 6 frasi), senza diagnosi mediche: per sintomi o dubbi suggerisci il medico. Dati recenti (JSON, giorni dal più recente): "+ctx()+"\n\nConversazione:\n";
+const msgs=h.map((m,i)=>({role:m.role,content:i===0?pre+m.content:m.content}));
+try{const r=await sample(msgs,{cache:false,onText:({text})=>{b.textContent=text}});b.textContent=r.text;hist.push({role:"assistant",content:r.text})}
+catch(e){hist.pop();b.textContent=e&&e.code==="not_granted"?"Per usare la chat serve il tuo consenso.":e&&e.code==="rate_limited"?"Troppe richieste, riprova tra poco.":"Non sono riuscito a rispondere, riprova.";}
+busy=false;$("#send").disabled=false}
+async function init(){
+$("#upd").textContent="Caricamento…";
+await Promise.all([load("ready","garmlink_readiness_get",{limit:14}),load("hrv","garmlink_hrv_get",{limit:30}),load("sleep","garmlink_sleep_get",{limit:30}),load("day","garmlink_daily_summary_get",{limit:7}),load("months","garmlink_stats_summary",{from:new Date().getFullYear()+"-01-01",group_by:"month"})]);
+hero();stats();hrv();sleep();months();
+const allFail=Object.keys(E).length===5;
+$("#upd").textContent=allFail?"Impossibile leggere i dati":stamp?"Aggiornato "+new Date(stamp).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"Dati Garmin"}
+(async()=>{
+$("#rf").onclick=async()=>{try{await mcp.invalidate()}catch(e){}stamp=null;A.hrv=A.sleep=A.mon=1;init()};
+[["Come sto oggi?"],["Devo preoccuparmi dell’HRV?"],["Come dormo ultimamente?"]].forEach(([t])=>{const b=document.createElement("button");b.textContent=t;b.onclick=()=>ask(t);$("#chips").appendChild(b)});
+$("#send").onclick=()=>ask($("#q").value);$("#q").addEventListener("keydown",e=>{if(e.key==="Enter")ask($("#q").value)});
+try{sample=await claude.use("sample")}catch(e){sample=null}
+if(!sample){$("#send").disabled=true;$("#q").disabled=true;$("#chips").style.display="none";$("#note").textContent="La chat non è disponibile in questa visualizzazione."}
+try{mcp=await claude.use("mcp")}catch(e){mcp=null}
+if(!mcp){$("#upd").textContent="Connettori non disponibili";["#hero","#hrv","#sleep","#months"].forEach(s=>$(s).innerHTML='<p class="err">Apri la pagina in Claude con Garmlink collegato.</p>');return}
+init()})();
+</script>
+</body>
+</html>
